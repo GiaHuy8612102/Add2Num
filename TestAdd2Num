@@ -1,0 +1,70 @@
+import unittest
+import sys
+import os
+import logging
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from Add2Num import MyBigNumber
+
+class TestMyBigNumber(unittest.TestCase):
+    
+    def setUp(self):
+        self.big_num = MyBigNumber()
+        logging.disable(logging.CRITICAL)
+    
+    def tearDown(self):
+        logging.disable(logging.NOTSET)
+    
+    def test_basic_addition(self):
+        result = self.big_num.sum("123", "456")
+        self.assertEqual(result, "579")
+    
+    def test_example_case(self):
+        result = self.big_num.sum("1234", "897")
+        self.assertEqual(result, "2131")
+    
+    def test_addition_with_carry(self):
+        result = self.big_num.sum("999", "1")
+        self.assertEqual(result, "1000")
+    
+    def test_zero_addition(self):
+        result = self.big_num.sum("0", "123")
+        self.assertEqual(result, "123")
+        
+        result = self.big_num.sum("123", "0")
+        self.assertEqual(result, "123")
+    
+    def test_large_numbers(self):
+        num1 = "123456789"
+        num2 = "987654321"
+        result = self.big_num.sum(num1, num2)
+        self.assertEqual(result, "1111111110")
+    
+    def test_different_lengths(self):
+        result = self.big_num.sum("1", "999")
+        self.assertEqual(result, "1000")
+        
+        result = self.big_num.sum("12345", "67")
+        self.assertEqual(result, "12412")
+    def test_wrong_expected_sum(self):
+        result = self.calculator.sum("1234", "897")
+        self.assertEqual(result, "2130")  
+
+    def test_empty_string(self):
+        with self.assertRaises(ValueError):
+            self.calculator.sum("", "123") 
+
+    def test_invalid_characters(self):
+        with self.assertRaises(ValueError):
+            self.calculator.sum("12a3", "456") 
+
+    def test_negative_number(self):
+        with self.assertRaises(ValueError):
+            self.calculator.sum("-123", "456")  
+
+    def test_leading_zero_incorrect(self):
+        result = self.calculator.sum("0999", "0001")
+        self.assertEqual(result, "0999")  
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
